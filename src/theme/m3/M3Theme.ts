@@ -1,19 +1,31 @@
 
 import { ThemeOptions } from "@mui/material/styles";
 import { Theme, lighten, darken, alpha } from '@mui/material';
+import DefaultTheme from "./default.json";
 
 interface M3Tone {
     0: string,
+    4: string,
+    6: string,
     10: string,
+    12: string,
+    17: string,
     20: string,
+    22: string,
+    24: string,
     30: string,
     40: string,
     50: string,
     60: string,
     70: string,
     80: string,
+    87: string,
     90: string,
+    92: string,
+    94: string,
     95: string,
+    96: string,
+    98: string,
     99: string,
     100: string
 }
@@ -66,6 +78,8 @@ export interface M3ColorTokens {
     inversePrimary: string,
     surfaceTint?: string,
 
+    outlineVariant?: string
+    scrim?: string
     outline: string,
     shadow: string,
 }
@@ -78,92 +92,7 @@ export interface M3ThemeScheme {
     tones?: M3ThemeTones
 }
 
-export const DEFAULT_M3_THEME_SCHEME: M3ThemeScheme = {
-    light: {
-        primary: '#6750A4',
-        onPrimary: '#FFFFFF',
-
-        primaryContainer: '#EADDFF',
-        onPrimaryContainer: '#21005E',
-
-        secondary: '#9c27b0',
-        onSecondary: '#FFFFFF',
-
-        secondaryContainer: '#E8DEF8',
-        onSecondaryContainer: '#1E192B',
-
-        tertiary: '#7D5260',
-        onTertiary: '#FFFFFF',
-
-        tertiaryContainer: '#FFD8E4',
-        onTertiaryContainer: '#370B1E',
-
-        error: '#B3261E',
-        onError: '#ffffff',
-
-        errorContainer: '#F9DEDC',
-        onErrorContainer: '#370B1E',
-
-        background: '#FFFBFE',
-        onBackground: '#1C1B1F',
-
-        surface: '#FFFBFE',
-        onSurface: '#1C1B1F',
-
-        surfaceVariant: '#E7E0EC',
-        onSurfaceVariant: '#49454E',
-
-        inverseSurface: '#313033',
-        inverseOnSurface: '#F4EFF4',
-
-        inversePrimary: '#D0BCFF',
-
-        outline: '#79747E',
-        shadow: '#000000',
-    },
-    dark: {
-        primary: '#D0BCFF',
-        onPrimary: '#371E73',
-
-        primaryContainer: '#4F378B',
-        onPrimaryContainer: '#EADDFF',
-
-        secondary: '#CCC2DC',
-        onSecondary: '#332D41',
-
-        secondaryContainer: '#4A4458',
-        onSecondaryContainer: '#E8DEF8',
-
-        tertiary: '#EFB8C8',
-        onTertiary: '#492532',
-
-        tertiaryContainer: '#633B48',
-        onTertiaryContainer: '#FFD8E4',
-
-        error: '#F2B8B5',
-        onError: '#601410',
-
-        errorContainer: '#8C1D18',
-        onErrorContainer: '#F9DEDC',
-
-        background: '#1C1B1F',
-        onBackground: '#E6E1E5',
-
-        surface: '#1C1B1F',
-        onSurface: '#E6E1E5',
-
-        surfaceVariant: '#49454F',
-        onSurfaceVariant: '#CAC4D0',
-
-        inverseSurface: '#E6E1E5',
-        inverseOnSurface: '#313033',
-
-        inversePrimary: '#6750A4',
-
-        outline: '#938F99',
-        shadow: '#000000',
-    },
-};
+export const DEFAULT_M3_THEME_SCHEME: M3ThemeScheme = DefaultTheme
 
 declare module '@mui/material/styles/createPalette' {
     interface Palette {
@@ -213,6 +142,7 @@ declare module '@mui/material/styles/createPalette' {
 declare module '@mui/material/styles/createTheme' {
     interface ThemeOptions {
         tones?: M3ThemeTones
+
     }
     interface Theme {
         tones?: M3ThemeTones
@@ -359,8 +289,8 @@ export const getDesignTokens = (mode: M3ThemeMode, scheme: M3ColorTokens, tones?
             shadow: scheme.shadow,
 
             background: {
-                default: scheme.background,
-                paper: scheme.surface
+                default: mode === 'light' ? tones?.neutral[94] : tones?.neutral[24],
+                paper: mode === 'light' ? tones?.neutral[98] : tones?.neutral[6],
             },
             common: {
                 white: scheme.background,
@@ -373,7 +303,7 @@ export const getDesignTokens = (mode: M3ThemeMode, scheme: M3ColorTokens, tones?
             },
             divider: scheme.outline
         },
-        tones
+        tones,
     } as ThemeOptions);
 };
 
@@ -431,32 +361,18 @@ export const getThemedComponents = (theme: Theme): { components: Theme['componen
                     root: {
                         background: theme.palette.surface.main,
                         color: theme.palette.onSurface.main,
-                        transition: theme.transitions.create(
-                            ['background-color', 'box-shadow', 'color'],
-                            {
-                                duration: theme.transitions.duration.short,
-                            },
-                        ),
+                        backgroundImage: "none",
+                        boxShadow: "none"
                     },
                     colorDefault: {
                         background: theme.palette.surface.main,
                         color: theme.palette.onSurface.main,
-                        transition: theme.transitions.create(
-                            ['background-color', 'box-shadow', 'color'],
-                            {
-                                duration: theme.transitions.duration.short,
-                            },
-                        ),
+                        backgroundImage: "none",
+                        boxShadow: "none"
                     },
                     colorPrimary: {
                         background: theme.palette.mode == 'light' ? lighten(theme.palette.primary.main, 0.85) : darken(theme.palette.primary.main, 0.8),
-                        color: theme.palette.surface.contrastText,
-                        transition: theme.transitions.create(
-                            ['background-color', 'box-shadow', 'color'],
-                            {
-                                duration: theme.transitions.duration.short,
-                            },
-                        ),
+                        color: theme.palette.surface.contrastText
                     }
                 },
             },
@@ -694,9 +610,7 @@ export const getThemedComponents = (theme: Theme): { components: Theme['componen
             MuiPaper: {
                 styleOverrides: {
                     root: {
-                        background: theme.palette.mode === 'dark' ?
-                            darken(theme.palette.primary.main, 0.9) :
-                            lighten(theme.palette.primary.main, 0.9),
+                        background: theme.palette.background.paper,
                         color: theme.palette.onSurface.main
                     },
                     outlined: {

@@ -7,12 +7,14 @@ import { deepmerge } from "@mui/utils";
 import { ThemeModeContext } from '../context/ThemeModeContext';
 import { ThemeSchemeContext } from '../context/ThemeSchemeContext';
 import { CssBaseline } from "@mui/material";
+import { Theme } from '@mui/material';
 
 interface M3ThemeProps {
     children: React.ReactNode,
+    overrides?: (...args: any[]) => Theme['components'];
 };
 
-const M3ThemeProvider: FC<M3ThemeProps> = ({ children }) => {
+export const M3ThemeProvider: FC<M3ThemeProps> = ({ children, overrides = () => ({}) }) => {
 
     const { themeMode } = useContext(ThemeModeContext);
     const { themeScheme } = useContext(ThemeSchemeContext);
@@ -20,9 +22,7 @@ const M3ThemeProvider: FC<M3ThemeProps> = ({ children }) => {
     const m3Theme = useMemo(() => {
         const designTokens = getDesignTokens(themeMode, themeScheme[themeMode], themeScheme.tones);
         let newM3Theme = createTheme(designTokens);
-        newM3Theme = deepmerge(newM3Theme, getThemedComponents(newM3Theme));
-
-        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeScheme[themeMode].surface);
+        newM3Theme = deepmerge(newM3Theme, deepmerge(getThemedComponents(newM3Theme), overrides(newM3Theme)));
 
         return newM3Theme;
     }, [themeMode, themeScheme]);
@@ -30,9 +30,7 @@ const M3ThemeProvider: FC<M3ThemeProps> = ({ children }) => {
     return (
         <ThemeProvider theme={m3Theme}>
             <CssBaseline enableColorScheme />
-            {children}.
+            {children}
         </ThemeProvider>
     );
 }
-
-export default M3ThemeProvider;

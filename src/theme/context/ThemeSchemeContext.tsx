@@ -1,6 +1,6 @@
-import { createContext, FC, ReactNode, useEffect, useState } from "react";
+import React, { createContext, FC, ReactNode, useEffect, useState } from "react";
 import { M3ThemeScheme, DEFAULT_M3_THEME_SCHEME } from '../m3/M3Theme';
-import { argbFromHex, hexFromArgb, themeFromImage, themeFromSourceColor } from '@material/material-color-utilities';
+import { argbFromHex, hexFromArgb, themeFromSourceColor, Theme } from '@importantimport/material-color-utilities';
 
 export interface ThemeSchemeContextType {
     themeScheme: M3ThemeScheme,
@@ -10,13 +10,13 @@ export interface ThemeSchemeContextType {
 
 export const ThemeSchemeContext = createContext<ThemeSchemeContextType>({
     themeScheme: DEFAULT_M3_THEME_SCHEME,
-    generateThemeScheme: async (base: string) => { },
+    generateThemeScheme: async () => { },
     resetThemeScheme: () => { }
 });
 
 const THEME_SCHEME_KEY = 'ThemeScheme';
 
-const ThemeSchemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
+export const ThemeSchemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
     const [themeScheme, setThemeScheme] = useState<M3ThemeScheme>(DEFAULT_M3_THEME_SCHEME);
 
@@ -30,22 +30,13 @@ const ThemeSchemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const generateThemeScheme = async (colorBase: string) => {
 
         const theme = themeFromSourceColor(argbFromHex(colorBase));
-
-        /*let theme = undefined;
-        if (typeof colorBase == 'string') {
-            theme = themeFromSourceColor(argbFromHex(colorBase));
-        }
-        else {
-            theme = await themeFromImage(colorBase);
-        }*/
-
         const paletteTones: any = {};
         const light: any = {};
         const dark: any = {};
 
         for (const [key, palette] of Object.entries(theme.palettes)) {
             const tones: any = {};
-            for (const tone of [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99, 100]) {
+            for (const tone of [0,4,6,10,12,17,20,22,24,30,40,50,60,70,80,87,90,92,94,95,96,98,99,100]) {
                 const color = hexFromArgb(palette.tone(tone));
                 tones[tone] = color;
             }
@@ -63,7 +54,7 @@ const ThemeSchemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
         const scheme: M3ThemeScheme = {
             light,
             dark,
-            tones: paletteTones
+            tones: paletteTones,
         };
         setThemeScheme(scheme);
         localStorage.setItem(THEME_SCHEME_KEY, JSON.stringify(scheme))
@@ -80,5 +71,3 @@ const ThemeSchemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
         </ThemeSchemeContext.Provider>
     )
 }
-
-export default ThemeSchemeProvider;
