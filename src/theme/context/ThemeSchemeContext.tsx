@@ -1,6 +1,6 @@
 import React, { createContext, FC, ReactNode, useEffect, useState } from "react";
 import { M3ThemeScheme, DEFAULT_M3_THEME_SCHEME } from '../m3/M3Theme';
-import { argbFromHex, hexFromArgb, themeFromSourceColor, Theme } from '@importantimport/material-color-utilities';
+import { argbFromHex, hexFromArgb, themeFromSourceColor, Theme } from '@material/material-color-utilities';
 
 export interface ThemeSchemeContextType {
     themeScheme: M3ThemeScheme,

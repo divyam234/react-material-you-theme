@@ -2,33 +2,35 @@
   "name": "@bhunter179/react-material-you-theme",
   "version": "0.1.10",
   "scripts": {
-    "build": "dts build",
-    "prepare": "dts build"
+    "build": "tsc --outDir dist/",
+    "publish": "npm publish --access=public",
+    "version": "npm --no-git-tag-version version patch"
   },
-  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
   "files": [
     "dist",
     "src"
   ],
   "dependencies": {
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
-    "@importantimport/material-color-utilities": "^0.2.2-alpha.0",
-    "@mui/icons-material": "^5.11.11",
-    "@mui/material": "^5.11.15",
-    "@mui/styled-engine-sc": "^5.11.11",
-    "material-dynamic-colors": "^0.1.7",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@material/material-color-utilities": "^0.2.6",
+    "@mui/material": "^5.13.5",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.10.0",
-    "styled-components": "^5.3.9"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/react": "^18.0.31",
-    "@types/react-dom": "^18.0.11",
-    "@types/styled-components": "^5.1.26",
-    "dts-cli": "^1.6.3",
-    "tslib": "^2.5.0",
-    "typescript": "^5.0.3"
+    "@types/react": "^18.2.11",
+    "@types/react-dom": "^18.2.4",
+    "tslib": "^2.5.3",
+    "typescript": "^5.1.3"
   }
 }
