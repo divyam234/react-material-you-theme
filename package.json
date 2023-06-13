@@ -1,18 +1,17 @@
 {
   "name": "@bhunter179/react-material-you-theme",
-  "version": "0.1.10",
+  "version": "0.1.19",
   "scripts": {
-    "build": "tsc --outDir dist/",
-    "publish": "npm publish --access=public",
-    "version": "npm --no-git-tag-version version patch"
+    "build": "dts build --format esm",
+    "release": "npm publish --access=public",
+    "patch": "npm --no-git-tag-version version patch"
   },
   "types": "dist/index.d.ts",
-  "module": "dist/index.js",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "import": "./dist/react-material-you-theme.esm.js"
     }
   },
   "files": [
@@ -20,16 +19,11 @@
     "src"
   ],
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
     "@material/material-color-utilities": "^0.2.6",
-    "@mui/material": "^5.13.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@mui/material": "^5.13.5"
   },
   "devDependencies": {
-    "@types/react": "^18.2.11",
-    "@types/react-dom": "^18.2.4",
+    "dts-cli": "^2.0.3",
     "tslib": "^2.5.3",
     "typescript": "^5.1.3"
   }

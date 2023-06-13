@@ -1,7 +1,7 @@
 
 import { ThemeOptions } from "@mui/material/styles";
 import { Theme, lighten, darken, alpha } from '@mui/material';
-import DefaultTheme from "./default.json";
+import { argbFromHex, hexFromArgb, themeFromSourceColor } from '@material/material-color-utilities';
 
 interface M3Tone {
     0: string,
@@ -91,8 +91,6 @@ export interface M3ThemeScheme {
     dark: M3ColorTokens,
     tones?: M3ThemeTones
 }
-
-export const DEFAULT_M3_THEME_SCHEME: M3ThemeScheme = DefaultTheme
 
 declare module '@mui/material/styles/createPalette' {
     interface Palette {
@@ -786,3 +784,33 @@ export const getThemedComponents = (theme: Theme): { components: Theme['componen
         }
     };
 };
+
+export const generateThemeScheme = (colorBase: string) => {
+    const theme = themeFromSourceColor(argbFromHex(colorBase));
+    const paletteTones: any = {};
+    const light: any = {};
+    const dark: any = {};
+    for (const [key, palette] of Object.entries(theme.palettes)) {
+        const tones: any = {};
+        for (const tone of [0, 4, 6, 10, 12, 17, 20, 22, 24, 30, 40, 50, 60, 70, 80, 87, 90, 92, 94, 95, 96, 98, 99, 100]) {
+            const color = hexFromArgb(palette.tone(tone));
+            tones[tone] = color;
+        }
+        paletteTones[key] = tones;
+    }
+
+    for (const [key, value] of Object.entries(theme.schemes.light.toJSON())) {
+        const color = hexFromArgb(value);
+        light[key] = color;
+    }
+    for (const [key, value] of Object.entries(theme.schemes.dark.toJSON())) {
+        const color = hexFromArgb(value);
+        dark[key] = color;
+    }
+    const scheme: M3ThemeScheme = {
+        light,
+        dark,
+        tones: paletteTones,
+    };
+    return scheme
+}
